@@ -2,7 +2,7 @@ bin
 build
 dist
 
-#Eclipse project files
+# Eclipse project files
 .project
 .settings
 .classpath
