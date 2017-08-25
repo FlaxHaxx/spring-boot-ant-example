@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="spring-boot-ant-example" default="build">
+	<!-- Config -->
+	<property name="start-class" value="se.blitter.springbootantexample.Application" />
+	<property name="spring-boot.version" value="1.5.3.RELEASE" />
+
+	<!-- Libs -->
+	<property name="lib.dir" value="lib" />
+
+	<!-- Build folders -->
+	<property name="dist.dir" value="dist" />
+	<property name="build.dir" value="build" />
+
+	<!-- Source -->
+	<property name="src.dir" value="src/main/java" />
+	<property name="resources.dir" value="src/main/resources" />
+
+	<!-- Compiled -->
+	<property name="build.classes.dir" value="${build.dir}/classes" />
+	<property name="build.jar.dir" value="${build.dir}/jar" />
+
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="*.jar" />
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${build.classes.dir}" />
+		<javac destdir="${build.classes.dir}" encoding="UTF-8" debug="true" target="1.8" source="1.8" srcdir="${src.dir}" classpathref="classpath" />
+		<copy todir="${build.classes.dir}">
+			<fileset dir="${resources.dir}" />
+		</copy>
+	</target>
+
+	<target name="build" depends="clean, compile">
+		<copy todir="${build.jar.dir}/BOOT-INF/classes">
+			<fileset dir="${build.classes.dir}" />
+		</copy>
+
+		<copy todir="${build.jar.dir}/BOOT-INF/lib">
+			<fileset dir="${lib.dir}" />
+		</copy>
+
+		<jar destfile="${dist.dir}/${ant.project.name}.jar" compress="false">
+			<fileset dir="${build.jar.dir}" />
+			<zipfileset src="${lib.dir}/spring-boot-loader-${spring-boot.version}.jar" />
+			<manifest>
+				<attribute name="Start-Class" value="${start-class}" />
+				<attribute name="Spring-Boot-Classes" value="BOOT-INF/classes/" />
+				<attribute name="Spring-Boot-Lib" value="BOOT-INF/lib/" />
+				<attribute name="Spring-Boot-Version" value="${spring-boot.version}" />
+				<attribute name="Main-Class" value="org.springframework.boot.loader.JarLauncher" />
+			</manifest>
+		</jar>
+	</target>
+</project>

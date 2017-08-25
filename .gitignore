@@ -1,0 +1,9 @@
+bin
+build
+dist
+
+#Eclipse project files
+.project
+.settings
+.classpath
+build
